@@ -1,34 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react"
 
-function App() {
-  const [count, setCount] = useState(0)
+const BASE_URL = "https://rickandmortyapi.com/api/character"
+
+const App = () => {
+
+  const [characters, setCharacters] = useState([])
+
+  const handleSearchCharacters = async () => {
+    const response = await fetch(BASE_URL)
+    const result = await response.json()
+    setCharacters(result.results)
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="App">
+      <header className="App-header">
+        <h1 className="title">Rick & Morty API</h1>
+        <img
+          src="/rick-morty.png"
+          alt="Rick & Morty" 
+          className="img-home"
+        />
+      </header>
+      <button
+        type="button"
+        className="btn-search"
+        onClick={handleSearchCharacters}
+      >Buscar Personajes</button>
+    </div>
   )
 }
 
