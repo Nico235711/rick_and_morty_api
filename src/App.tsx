@@ -1,33 +1,36 @@
 import { useState } from "react"
+import { rickAndMortySchemaArray } from "./schemas"
+import { RickAndMorty } from "./types"
+import { Characters } from "./components/Characters"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { Header } from "./components/Header"
 
 const BASE_URL = "https://rickandmortyapi.com/api/character"
 
 const App = () => {
 
-  const [characters, setCharacters] = useState([])
+  const [characters, setCharacters] = useState<RickAndMorty>([])
 
   const handleSearchCharacters = async () => {
     const response = await fetch(BASE_URL)
-    const result = await response.json()
-    setCharacters(result.results)
+    const { results } = await response.json()
+    const result = rickAndMortySchemaArray.safeParse(results)
+    if (result.success) setCharacters(result.data)
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1 className="title">Rick & Morty API</h1>
-        <img
-          src="/rick-morty.png"
-          alt="Rick & Morty" 
-          className="img-home"
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={<Header handleSearchCharacters={handleSearchCharacters} />}
         />
-      </header>
-      <button
-        type="button"
-        className="btn-search"
-        onClick={handleSearchCharacters}
-      >Buscar Personajes</button>
-    </div>
+        <Route
+          path="/characters"
+          element={<Characters characters={characters} />}
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
